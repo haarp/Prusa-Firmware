@@ -236,10 +236,31 @@
 #define TMC2130_PWM_AUTO_E  1         // PWMCONF
 #define TMC2130_PWM_FREQ_E  2         // PWMCONF
 
-#define TMC2130_TOFF_XYZ    3         // CHOPCONF // fchop = 27.778kHz
+#define TMC2130_TOFF_X      3         // CHOPCONF // fchop = 27.778kHz
+#define TMC2130_HSTR_X      5
+#define TMC2130_HEND_X      1
+#define TMC2130_TBL_X       2
+#define TMC2130_RES_X       0
+
+#define TMC2130_TOFF_Y      3         // CHOPCONF // fchop = 27.778kHz
+#define TMC2130_HSTR_Y      5
+#define TMC2130_HEND_Y      1
+#define TMC2130_TBL_Y       2
+#define TMC2130_RES_Y       0
+
+#define TMC2130_TOFF_Z      3         // CHOPCONF // fchop = 27.778kHz
+#define TMC2130_HSTR_Z      5
+#define TMC2130_HEND_Z      1
+#define TMC2130_TBL_Z       2
+#define TMC2130_RES_Z       0
+
 #define TMC2130_TOFF_E      3         // CHOPCONF // fchop = 27.778kHz
 //#define TMC2130_TOFF_E      4         // CHOPCONF // fchop = 21.429kHz
 //#define TMC2130_TOFF_E      5         // CHOPCONF // fchop = 17.442kHz
+#define TMC2130_HSTR_E      5
+#define TMC2130_HEND_E      1
+#define TMC2130_TBL_E       2
+#define TMC2130_RES_E       0
 
 //#define TMC2130_STEALTH_E // Extruder stealthChop mode
 //#define TMC2130_CNSTOFF_E // Extruder constant-off-time mode (similar to MK2)
