@@ -258,7 +258,9 @@
 
 #define TMC2130_SG_HOMING       1     // stallguard homing
 #define TMC2130_SG_THRS_X       3     // stallguard sensitivity for X axis
+#define TMC2130_SG_THRS_X_HOME  3     // homing stallguard sensitivity for X axis
 #define TMC2130_SG_THRS_Y       3     // stallguard sensitivity for Y axis
+#define TMC2130_SG_THRS_Y_HOME  3     // homing stallguard sensitivity for Y axis
 #define TMC2130_SG_THRS_Z       4     // stallguard sensitivity for Z axis
 #define TMC2130_SG_THRS_E       3     // stallguard sensitivity for E axis
 
