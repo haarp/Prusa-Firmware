@@ -7587,6 +7587,143 @@ Sigma_Exit:
     }
     break;
 
+  //! ### M919 - Set TMC2130 toff
+  // -----------------------------------
+	case 919:
+    {
+	uint8_t a = 0;
+	uint8_t theValue;
+
+	if (code_seen('X')) {
+            a = 0;
+            theValue = code_value();
+	}
+	if (code_seen('Y')) {
+            a = 1;
+            theValue = code_value();
+	}
+	if (code_seen('Z')) {
+            a = 2;
+            theValue = code_value();
+	}
+	if (code_seen('E')) {
+            a = 3;
+            theValue = code_value();
+	}
+
+	tmc2130_chopper_config[a].toff = theValue;
+	printf_P(_N("tmc2130_toff[%c]=%d\n"), "XYZE"[a], tmc2130_chopper_config[a].toff);
+
+	tmc2130_setup_chopper(a, tmc2130_mres[a], tmc2130_current_h[a], tmc2130_current_r[a]);
+    }
+    break;
+
+  //! ### M920 - Set TMC2130 hstr
+  // -----------------------------------
+	case 920:
+    {
+	uint8_t a = 0;
+	uint8_t theValue;
+
+	if (code_seen('X')) {
+            a = 0;
+            theValue = code_value();
+	}
+	if (code_seen('Y')) {
+            a = 1;
+            theValue = code_value();
+	}
+	if (code_seen('Z')) {
+            a = 2;
+            theValue = code_value();
+	}
+	if (code_seen('E')) {
+            a = 3;
+            theValue = code_value();
+	}
+
+	tmc2130_chopper_config[a].hstr = theValue;
+	printf_P(_N("tmc2130_hstr[%c]=%d\n"), "XYZE"[a], tmc2130_chopper_config[a].hstr);
+
+	tmc2130_setup_chopper(a, tmc2130_mres[a], tmc2130_current_h[a], tmc2130_current_r[a]);
+    }
+    break;
+
+  //! ### M921 - Set TMC2130 hend
+  // -----------------------------------
+	case 921:
+    {
+	uint8_t a = 0;
+	uint8_t theValue;
+
+	if (code_seen('X')) {
+            a = 0;
+            theValue = code_value();
+	}
+	if (code_seen('Y')) {
+            a = 1;
+            theValue = code_value();
+	}
+	if (code_seen('Z')) {
+            a = 2;
+            theValue = code_value();
+	}
+	if (code_seen('E')) {
+            a = 3;
+            theValue = code_value();
+	}
+
+	tmc2130_chopper_config[a].hend = theValue;
+	printf_P(_N("tmc2130_hend[%c]=%d\n"), "XYZE"[a], tmc2130_chopper_config[a].hend);
+
+	tmc2130_setup_chopper(a, tmc2130_mres[a], tmc2130_current_h[a], tmc2130_current_r[a]);
+    }
+    break;
+
+  //! ### M922 - Set TMC2130 tbl
+  // -----------------------------------
+	case 922:
+    {
+	uint8_t a = 0;
+	uint8_t theValue;
+
+	if (code_seen('X')) {
+            a = 0;
+           theValue = code_value();
+	}
+	if (code_seen('Y')) {
+            a = 1;
+            theValue = code_value();
+	}
+	if (code_seen('Z')) {
+            a = 2;
+            theValue = code_value();
+	}
+	if (code_seen('E')) {
+            a = 3;
+            theValue = code_value();
+	}
+
+	tmc2130_chopper_config[a].tbl = theValue;
+	printf_P(_N("tmc2130_tbl[%c]=%d\n"), "XYZE"[a], tmc2130_chopper_config[a].tbl);
+
+	tmc2130_setup_chopper(a, tmc2130_mres[a], tmc2130_current_h[a], tmc2130_current_r[a]);
+    }
+    break;
+
+  //! ### M924 - Set TMC2130 sg_thrs_home
+  // -----------------------------------
+	case 924:
+    {
+	if (code_seen('X')) tmc2130_sg_thr_home[X_AXIS] = code_value();
+	if (code_seen('Y')) tmc2130_sg_thr_home[Y_AXIS] = code_value();
+	if (code_seen('Z')) tmc2130_sg_thr_home[Z_AXIS] = code_value();
+	if (code_seen('E')) tmc2130_sg_thr_home[E_AXIS] = code_value();
+	for (uint8_t a = X_AXIS; a <= E_AXIS; a++)
+            printf_P(_N("tmc2130_sg_thr_home[%c]=%d\n"), "XYZE"[a], tmc2130_sg_thr_home[a]);
+    }
+    break;
+
 #endif //TMC2130_SERVICE_CODES_M910_M918
 
     //! ### M350 - Set microstepping mode
