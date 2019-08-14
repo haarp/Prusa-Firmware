@@ -41,6 +41,17 @@
  AXIS SETTINGS
  *------------------------------------*/
 
+// ==== Motor setup for 0.9° steppers on X, Y, Z or E axis
+// Uncomment as needed.
+// Note that extruder setup/µsteps are not included or adjusted in this version.
+// Current rating should be ≤1A to avoid overheating drivers in StealthChop.
+// Recommended motors are Moons MS17HA2P4100 or OMC 17HM15-0904S.
+#define X_AXIS_MOTOR_09
+#define Y_AXIS_MOTOR_09
+//#define Z_AXIS_MOTOR_09
+//#define E_AXIS_MOTOR_09
+
+
 // Steps per unit {X,Y,Z,E}
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,140}
 #define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,280}
@@ -82,7 +93,18 @@
 #define Z_PAUSE_LIFT 20
 
 #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
-#define HOMING_FEEDRATE {3000, 3000, 800, 0}  // set the homing speeds (mm/min) // 3000 is also valid for stallGuard homing. Valid range: 2200 - 3000
+
+#ifdef X_AXIS_MOTOR_09
+  #define HOMING_FEEDRATE_X 2000  // slower feedrate for reliable X 0.9° motor StallGuard
+#else
+  #define HOMING_FEEDRATE_X 3000
+#endif
+#ifdef Y_AXIS_MOTOR_09
+  #define HOMING_FEEDRATE_Y 2000  // slower feedrate for reliable Y 0.9° motor StallGuard
+#else
+  #define HOMING_FEEDRATE_Y 3000
+#endif
+#define HOMING_FEEDRATE {HOMING_FEEDRATE_X, HOMING_FEEDRATE_Y, 800, 0}  // set the homing speeds (mm/min) // 3000 is also valid for stallGuard homing. Valid range: 2200 - 3000
 
 //#define DEFAULT_Y_OFFSET    4.f // Default distance of Y_MIN_POS point from endstop, when the printer is not calibrated.
 /**
@@ -208,21 +230,49 @@
 
 #define TMC2130_FCLK 12000000       // fclk = 12MHz
 
-#define TMC2130_USTEPS_X    16        // microstep resolution for X axis
-#define TMC2130_USTEPS_Y    16        // microstep resolution for Y axis
-#define TMC2130_USTEPS_Z    16        // microstep resolution for Z axis
-#define TMC2130_USTEPS_E    32        // microstep resolution for E axis
+#ifdef X_AXIS_MOTOR_09
+  #define TMC2130_USTEPS_X    8         // reduce µsteps because otherwise EINSY cannot keep up on 0.9° motor
+#else
+  #define TMC2130_USTEPS_X    16        // µstep resolution for X axis
+#endif
+#ifdef Y_AXIS_MOTOR_09
+  #define TMC2130_USTEPS_Y    8         // reduce µsteps because otherwise EINSY cannot keep up on 0.9° motor
+#else
+  #define TMC2130_USTEPS_Y    16        // µstep resolution for Y axis
+#endif
+#ifdef Z_AXIS_MOTOR_09
+  #define TMC2130_USTEPS_Z    8         // reduce µsteps because otherwise EINSY cannot keep up on 0.9° motor
+#else
+  #define TMC2130_USTEPS_Z    16        // µstep resolution for Z axis
+#endif
+#ifdef E_AXIS_MOTOR_09
+  #define TMC2130_USTEPS_E    16        // reduce µsteps because otherwise EINSY cannot keep up on 0.9° motor
+#else
+  #define TMC2130_USTEPS_E    32        // µstep resolution for E axis
+#endif
+
 #define TMC2130_INTPOL_XY   1         // extrapolate 256 for XY axes
 #define TMC2130_INTPOL_Z    1         // extrapolate 256 for Z axis
 #define TMC2130_INTPOL_E    1         // extrapolate 256 for E axis
 
-#define TMC2130_PWM_GRAD_X  2         // PWMCONF
-#define TMC2130_PWM_AMPL_X  230       // PWMCONF
+#ifdef X_AXIS_MOTOR_09
+  #define TMC2130_PWM_GRAD_X  4         // Better axis motion control with lower (2,3,4) but can squeak during fast decelerations
+  #define TMC2130_PWM_AMPL_X  235
+#else
+  #define TMC2130_PWM_GRAD_X  2         // PWMCONF
+  #define TMC2130_PWM_AMPL_X  230       // PWMCONF
+#endif
 #define TMC2130_PWM_AUTO_X  1         // PWMCONF
 #define TMC2130_PWM_FREQ_X  2         // PWMCONF
 
-#define TMC2130_PWM_GRAD_Y  2         // PWMCONF
-#define TMC2130_PWM_AMPL_Y  235       // PWMCONF
+#ifdef Y_AXIS_MOTOR_09
+  #define TMC2130_PWM_GRAD_Y  4         // Better axis motion control with lower (2,3,4) but can squeak during fast decelerations
+                                        // too high causes Y-layer shifts, 4 is reasonable choice on Y
+  #define TMC2130_PWM_AMPL_Y  250       // raised to 250 to prevent Y-layer shifts on weaker motors
+#else
+  #define TMC2130_PWM_GRAD_Y  2         // PWMCONF
+  #define TMC2130_PWM_AMPL_Y 235        // PWMCONF
+#endif
 #define TMC2130_PWM_AUTO_Y  1         // PWMCONF
 #define TMC2130_PWM_FREQ_Y  2         // PWMCONF
 
@@ -231,36 +281,73 @@
 #define TMC2130_PWM_AUTO_Z  1         // PWMCONF
 #define TMC2130_PWM_FREQ_Z  2         // PWMCONF
 
-#define TMC2130_PWM_GRAD_E  4         // PWMCONF
-#define TMC2130_PWM_AMPL_E  240       // PWMCONF
+#ifdef E_AXIS_MOTOR_09
+  #define TMC2130_PWM_GRAD_E  4
+  #define TMC2130_PWM_AMPL_E  245
+#else
+  #define TMC2130_PWM_GRAD_E  4         // PWMCONF
+  #define TMC2130_PWM_AMPL_E  240       // PWMCONF
+#endif
 #define TMC2130_PWM_AUTO_E  1         // PWMCONF
 #define TMC2130_PWM_FREQ_E  2         // PWMCONF
 
-#define TMC2130_TOFF_X      3         // CHOPCONF // fchop = 27.778kHz
-#define TMC2130_HSTR_X      5
-#define TMC2130_HEND_X      1
-#define TMC2130_TBL_X       2
-#define TMC2130_RES_X       0
+#ifdef X_AXIS_MOTOR_09
+  #define TMC2130_TOFF_X      2
+  #define TMC2130_HSTR_X      2
+  #define TMC2130_HEND_X      0
+  #define TMC2130_TBL_X       2
+  #define TMC2130_RES_X       0
+#else
+  #define TMC2130_TOFF_X      3         // CHOPCONF // fchop = 27.778kHz
+  #define TMC2130_HSTR_X      5
+  #define TMC2130_HEND_X      1
+  #define TMC2130_TBL_X       2
+  #define TMC2130_RES_X       0
+#endif
 
-#define TMC2130_TOFF_Y      3         // CHOPCONF // fchop = 27.778kHz
-#define TMC2130_HSTR_Y      5
-#define TMC2130_HEND_Y      1
-#define TMC2130_TBL_Y       2
-#define TMC2130_RES_Y       0
+#ifdef Y_AXIS_MOTOR_09
+  #define TMC2130_TOFF_Y      2
+  #define TMC2130_HSTR_Y      2
+  #define TMC2130_HEND_Y      0
+  #define TMC2130_TBL_Y       2
+  #define TMC2130_RES_Y       0
+#else
+  #define TMC2130_TOFF_Y      3         // CHOPCONF // fchop = 27.778kHz
+  #define TMC2130_HSTR_Y      5
+  #define TMC2130_HEND_Y      1
+  #define TMC2130_TBL_Y       2
+  #define TMC2130_RES_Y       0
+#endif
 
-#define TMC2130_TOFF_Z      3         // CHOPCONF // fchop = 27.778kHz
-#define TMC2130_HSTR_Z      5
-#define TMC2130_HEND_Z      1
-#define TMC2130_TBL_Z       2
-#define TMC2130_RES_Z       0
+#ifdef Z_AXIS_MOTOR_09
+  #define TMC2130_TOFF_Z      2
+  #define TMC2130_HSTR_Z      2
+  #define TMC2130_HEND_Z      0
+  #define TMC2130_TBL_Z       2
+  #define TMC2130_RES_Z       0
+#else
+  #define TMC2130_TOFF_Z      3         // CHOPCONF // fchop = 27.778kHz
+  #define TMC2130_HSTR_Z      5
+  #define TMC2130_HEND_Z      1
+  #define TMC2130_TBL_Z       2
+  #define TMC2130_RES_Z       0
+#endif
 
-#define TMC2130_TOFF_E      3         // CHOPCONF // fchop = 27.778kHz
-//#define TMC2130_TOFF_E      4         // CHOPCONF // fchop = 21.429kHz
-//#define TMC2130_TOFF_E      5         // CHOPCONF // fchop = 17.442kHz
-#define TMC2130_HSTR_E      5
-#define TMC2130_HEND_E      1
-#define TMC2130_TBL_E       2
-#define TMC2130_RES_E       0
+#ifdef E_AXIS_MOTOR_09
+  #define TMC2130_TOFF_E      2
+  #define TMC2130_HSTR_E      2
+  #define TMC2130_HEND_E      0
+  #define TMC2130_TBL_E       2
+  #define TMC2130_RES_E       0
+#else
+  #define TMC2130_TOFF_E      3         // CHOPCONF // fchop = 27.778kHz
+  //#define TMC2130_TOFF_E      4         // CHOPCONF // fchop = 21.429kHz
+  //#define TMC2130_TOFF_E      5         // CHOPCONF // fchop = 17.442kHz
+  #define TMC2130_HSTR_E      5
+  #define TMC2130_HEND_E      1
+  #define TMC2130_TBL_E       2
+  #define TMC2130_RES_E       0
+#endif
 
 //#define TMC2130_STEALTH_E // Extruder stealthChop mode
 //#define TMC2130_CNSTOFF_E // Extruder constant-off-time mode (similar to MK2)
@@ -280,10 +367,23 @@
 #define TMC2130_TCOOLTHRS_E 500       // TCOOLTHRS - coolstep treshold
 
 #define TMC2130_SG_HOMING       1     // stallguard homing
-#define TMC2130_SG_THRS_X       3     // stallguard sensitivity for X axis
-#define TMC2130_SG_THRS_X_HOME  3     // homing stallguard sensitivity for X axis
-#define TMC2130_SG_THRS_Y       3     // stallguard sensitivity for Y axis
-#define TMC2130_SG_THRS_Y_HOME  3     // homing stallguard sensitivity for Y axis
+
+// Note: Trinamic strongly recommends [-10,10], lower value = more sensitive
+// if motors or homing speed are changed, homing thresholds need re-evaluation
+#ifdef X_AXIS_MOTOR_09
+  #define TMC2130_SG_THRS_X       4
+  #define TMC2130_SG_THRS_X_HOME  4
+#else
+  #define TMC2130_SG_THRS_X       3     // stallguard sensitivity for X axis
+  #define TMC2130_SG_THRS_X_HOME  3     // homing stallguard sensitivity for X axis
+#endif
+#ifdef Y_AXIS_MOTOR_09
+  #define TMC2130_SG_THRS_Y       4
+  #define TMC2130_SG_THRS_Y_HOME  2
+#else
+  #define TMC2130_SG_THRS_Y       3     // stallguard sensitivity for Y axis
+  #define TMC2130_SG_THRS_Y_HOME  3     // homing stallguard sensitivity for Y axis
+#endif
 #define TMC2130_SG_THRS_Z       4     // stallguard sensitivity for Z axis
 #define TMC2130_SG_THRS_E       3     // stallguard sensitivity for E axis
 
@@ -294,7 +394,7 @@
 
 #define TMC2130_STEALTH_Z
 
-//#define TMC2130_SERVICE_CODES_M910_M918
+#define TMC2130_SERVICE_CODES_M910_M918
 
 //#define TMC2130_DEBUG
 //#define TMC2130_DEBUG_WR
