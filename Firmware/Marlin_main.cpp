@@ -7724,6 +7724,18 @@ Sigma_Exit:
     }
     break;
 
+  //! ### M925 - Set homing feedrate
+  // -----------------------------------
+	case 925:
+    {
+	if (code_seen('X')) homing_feedrate[X_AXIS] = code_value();
+	if (code_seen('Y')) homing_feedrate[Y_AXIS] = code_value();
+	if (code_seen('Z')) homing_feedrate[Z_AXIS] = code_value();
+	for (uint8_t a = X_AXIS; a <= Z_AXIS; a++)
+            printf_P(_N("homing_feedrate[%c]=%f\n"), "XYZE"[a], homing_feedrate[a]);
+    }
+    break;
+
 #endif //TMC2130_SERVICE_CODES_M910_M918
 
     //! ### M350 - Set microstepping mode
