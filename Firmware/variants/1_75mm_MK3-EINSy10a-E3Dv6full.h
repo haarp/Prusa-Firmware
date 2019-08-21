@@ -93,12 +93,12 @@
 #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
 
 #ifdef X_AXIS_MOTOR_09
-  #define HOMING_FEEDRATE_X 2000  // slower feedrate for reliable X 0.9° motor StallGuard
+  #define HOMING_FEEDRATE_X 2450  // fine-tuned feedrate for reliable homing
 #else
   #define HOMING_FEEDRATE_X 3000
 #endif
 #ifdef Y_AXIS_MOTOR_09
-  #define HOMING_FEEDRATE_Y 2000  // slower feedrate for reliable Y 0.9° motor StallGuard
+  #define HOMING_FEEDRATE_Y 2450  // fine-tuned feedrate for reliable homing
 #else
   #define HOMING_FEEDRATE_Y 3000
 #endif
