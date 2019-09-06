@@ -385,6 +385,12 @@
 #define TMC2130_SG_THRS_Z       4     // stallguard sensitivity for Z axis
 #define TMC2130_SG_THRS_E       3     // stallguard sensitivity for E axis
 
+#if defined(X_AXIS_MOTOR_09) || defined(Y_AXIS_MOTOR_09)
+  #define kHOMING_CNT_MIN 10          // 0.9° motors often home at much lower count
+#else
+  #define kHOMING_CNT_MIN 63          // min acceptable homing count
+#endif
+
 //new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
 #define TMC2130_CURRENTS_H {16, 20, 35, 30}  // default holding currents for all axes
 #define TMC2130_CURRENTS_R {16, 20, 35, 30}  // default running currents for all axes
